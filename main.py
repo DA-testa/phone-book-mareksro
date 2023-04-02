@@ -31,7 +31,7 @@ def process_queries(queries):
             contacts.pop(cur_query.number, None)
             phone_nr.discard(cur_query.number)
         else:
-            contacts.get(contacts.get(cur_query.number, 'not found'))
+            result.append(contacts.get(cur_query.number, 'not found'))
             
     return result
 
