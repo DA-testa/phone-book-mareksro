@@ -18,18 +18,22 @@ def process_queries(queries):
     result = []
     # Keep list of all existing (i.e. not deleted yet) contacts.
     contacts = {}
-    phone_nr = set()
+    
+    telefons = set()
     for cur_query in queries:
         if cur_query.type == 'add':
-            if cur_query.number not in phone_nr:
+            # pievienoju saraksta, tel numurs ir jauns
+            if cur_query.number not in telefons:
                 contacts[cur_query.number] = cur_query.name
-                phone_nr.add(cur_query.number)
-                    # otherwise, just add it
+                telefons.add(cur_query.number)
+                # otherwise, just add it
             else:
                 contacts[cur_query.number] = cur_query.name
+            # noņemu no sarkasta, ja vēl pastāv
         elif cur_query.type == 'del':
             contacts.pop(cur_query.number, None)
-            phone_nr.discard(cur_query.number)
+            telefons.discard(cur_query.number)
+            # tiek meklēts pēc numura
         else:
             result.append(contacts.get(cur_query.number, 'not found'))
             
