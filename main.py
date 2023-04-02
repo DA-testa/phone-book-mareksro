@@ -18,11 +18,11 @@ def process_queries(queries):
     result = []
     # Keep list of all existing (i.e. not deleted yet) contacts.
     contacts = {}
-    
+    # paturu numurus, kas iepriekš tika pievienoti
     telefons = set()
     for cur_query in queries:
         if cur_query.type == 'add':
-            # pievienoju saraksta, tel numurs ir jauns
+            # pievienoju sarakstā, ja tel numurs ir jauns
             if cur_query.number not in telefons:
                 contacts[cur_query.number] = cur_query.name
                 telefons.add(cur_query.number)
