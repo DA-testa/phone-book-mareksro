@@ -18,20 +18,21 @@ def process_queries(queries):
     result = []
     # Keep list of all existing (i.e. not deleted yet) contacts.
     contacts = {}
+    phone_numbers = set()
     for cur_query in queries:
         if cur_query.type == 'add':
+            if cur_query.number in contacts:
                 contacts[cur_query.number] = cur_query.name
-            #else: # otherwise, just add it
-                #contacts[cur_query.number] = cur_query.name
-               
+            else: # otherwise, just add it
+                contacts[cur_query.number] = cur_query.name
+                phone_numbers.add(cur_query.number)
         elif cur_query.type == 'del':
             if cur_query.number in contacts:
                 del contacts[cur_query.number]
-        else:
-            if cur_query.number in contacts:
-                    result.append(contacts[cur_query.number])
+                phone_numbers.remove(cur_query.number)
             else:
-                result.append('not found')
+                response = contacts.get(cur_query.number, 'not found')
+                result.append(response)
     return result
 
 if __name__ == '__main__':
