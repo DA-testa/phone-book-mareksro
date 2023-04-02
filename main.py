@@ -17,29 +17,26 @@ def write_responses(result):
 def process_queries(queries):
     result = []
     # Keep list of all existing (i.e. not deleted yet) contacts.
-    contacts = []
+    contacts = {}
+    # paturu numurus, kas iepriekš tika pievienoti
+    telefons = set()
     for cur_query in queries:
         if cur_query.type == 'add':
-            # if we already have contact with such number,
-            # we should rewrite contact's name
-            for contact in contacts:
-                if contact.number == cur_query.number:
-                    contact.name = cur_query.name
-                    break
-            else: # otherwise, just add it
-                contacts.append(cur_query)
+            # pievienoju sarakstā, ja tel numurs ir jauns
+            if cur_query.number not in telefons:
+                contacts[cur_query.number] = cur_query.name
+                telefons.add(cur_query.number)
+                # otherwise, just add it
+            else:
+                contacts[cur_query.number] = cur_query.name
+            # noņemu no sarkasta, ja vēl pastāv
         elif cur_query.type == 'del':
-            for j in range(len(contacts)):
-                if contacts[j].number == cur_query.number:
-                    contacts.pop(j)
-                    break
+            contacts.pop(cur_query.number, None)
+            telefons.discard(cur_query.number)
+            # tiek meklēts pēc numura
         else:
-            response = 'not found'
-            for contact in contacts:
-                if contact.number == cur_query.number:
-                    response = contact.name
-                    break
-            result.append(response)
+            result.append(contacts.get(cur_query.number, 'not found'))
+            
     return result
 
 if __name__ == '__main__':
